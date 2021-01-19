@@ -1,5 +1,7 @@
 package de.ellpeck.nyx.items;
 
+import de.ellpeck.nyx.Config;
+
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -96,7 +98,7 @@ public class Bow extends ItemBow {
                         }
 
                         // edit: increase arrow damage
-                        entityarrow.setDamage(entityarrow.getDamage() * 1.25F);
+                        entityarrow.setDamage(entityarrow.getDamage() * Config.bowDamageMultiplier);
 
                         worldIn.spawnEntity(entityarrow);
                     }
