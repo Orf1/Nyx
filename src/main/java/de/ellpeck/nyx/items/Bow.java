@@ -96,7 +96,7 @@ public class Bow extends ItemBow {
                         }
 
                         // edit: increase arrow damage
-                        entityarrow.setDamage(entityarrow.getDamage() * 1.75F);
+                        entityarrow.setDamage(entityarrow.getDamage() * 1.25F);
 
                         worldIn.spawnEntity(entityarrow);
                     }
