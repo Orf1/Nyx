@@ -306,8 +306,8 @@ public final class Events {
             if (level <= 0)
                 return;
             float exp = event.getDroppedExperience();
-            float mod = 2 * (level / (float) Registry.lunarEdge.getMaxLevel());
-            event.setDroppedExperience(MathHelper.floor(exp * mod));
+            float mod = level / (float) Registry.lunarEdge.getMaxLevel();
+            event.setDroppedExperience(exp + MathHelper.floor(exp * mod));
         }
     }
 
