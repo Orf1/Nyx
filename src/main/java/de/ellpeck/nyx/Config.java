@@ -51,6 +51,8 @@ public final class Config {
     public static boolean meteors;
     public static int meteorDisallowRadius;
     public static int meteorDisallowTime;
+    public static boolean meteorKillUnloaded;
+    public static boolean meteorCacheUnloaded;
     public static Set<String> enchantingWhitelistDimensions;
     public static boolean eventNotifications;
     public static int crystalDurability;
@@ -109,7 +111,9 @@ public final class Config {
         meteorChanceEnd = instance.get("meteors", "meteorChanceEnd", 0.003, "The chance of a meteor spawning every second, in the end dimension").getDouble();
         meteorSpawnRadius = instance.get("meteors", "meteorSpawnRadius", 1000, "The amount of blocks a meteor can spawn away from the nearest player").getInt();
         meteorDisallowRadius = instance.get("meteors", "meteorDisallowRadius", 16, "The radius in chunks that should be marked as invalid for meteor spawning around each player").getInt();
-        meteorDisallowTime = instance.get("meteors", "meteorDisallowTime", 12000, "The amount of ticks that need to pass for each player until the chance of a meteor spawning in the area is halved (and then halved again, and so on)").getInt();
+        meteorDisallowTime = instance.get("meteors", "meteorDisallowTime", 12000, "The amount of ticks that need to pass for each player until the chance of a meteor spawning in the area is halved (and then halved again, and so on). This decreases the chance of a meteor hitting a base or player hub").getInt();
+        meteorKillUnloaded = instance.get("meteors", "meteorKillUnloaded", false, "If meteors passing through unloaded chunks should be removed. If the game is lagging because of the unloaded chunks, try enabling this").getBoolean();
+        meteorCacheUnloaded = instance.get("meteors", "meteorCacheUnloaded", false, "If meteors passing through unloaded chunks should be cached at that position until entering the unloaded chunk. This option is ignored if meteorKillUnloaded is true.").getBoolean();
         crystalDurability = instance.get("meteors", "crystalDurability", 1000, "The amount of uses that a gleaning crystal should have for bone-mealing").getInt();
         hammerDamage = instance.get("meteors", "hammerDamage", 15, "The amount of damage that the meteor hammer deals if the maximum flight time was used").getInt();
         bowDamageMultiplier = instance.get("meteors", "bowDamageMult", 1.75, "The multiplier for the amount of damage inflicted by the meteor bow's arrows").getDouble();

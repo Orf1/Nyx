@@ -1,5 +1,6 @@
 package de.ellpeck.nyx.entities;
 
+import de.ellpeck.nyx.Config;
 import de.ellpeck.nyx.Nyx;
 import de.ellpeck.nyx.Registry;
 import de.ellpeck.nyx.capabilities.NyxWorld;
@@ -70,8 +71,26 @@ public class FallingMeteor extends FallingStar {
     protected void customUpdate() {
         if (!this.world.isRemote) {
             // falling into the void
-            if (this.posY <= -64)
+            if (this.posY <= -64) {
                 this.setDead();
+                return;
+            }
+            
+            // Kill meteors that are in unloaded chunks?
+            if (Config.meteorKillUnloaded && !this.world.isBlockLoaded(this.getPosition(), false)) {
+                this.setDead();
+                return;
+            }
+            
+            // Cache meteors that are in unloaded chunks?
+            if (Config.meteorCacheUnloaded && !this.world.isBlockLoaded(this.getPosition(), false)) {
+                NyxWorld data = NyxWorld.get(this.world);
+                data.cachedMeteorPositions.add(this.getPosition());
+                data.sendToClients();
+
+                this.setDead();
+                return;
+            }
 
             // move towards the closest player if we're homing
             if (this.homing) {
