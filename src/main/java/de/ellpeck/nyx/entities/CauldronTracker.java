@@ -14,16 +14,20 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
 
@@ -95,12 +99,49 @@ public class CauldronTracker extends Entity {
             }
         } else {
             List<EntityItem> items = this.world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(this.trackingPos));
+
+            Ingredient toMatch = null;
+            switch (Config.lunarWaterItemParts.length) {
+                case 1:
+                    ResourceLocation r1 = new ResourceLocation(Config.lunarWaterItemParts[0]);
+                    if (ForgeRegistries.ITEMS.containsKey(r1))
+                        toMatch = Ingredient.fromItem(ForgeRegistries.ITEMS.getValue(r1));
+                    break;
+                case 2:
+                    if ("ore".equals(Config.lunarWaterItemParts[0]))
+                        toMatch = Ingredient.fromStacks(OreDictionary.getOres(Config.lunarWaterItemParts[1]).toArray(new ItemStack[0]));
+                    else {
+                        ResourceLocation r2 = new ResourceLocation(Config.lunarWaterItemParts[0], Config.lunarWaterItemParts[1]);
+                        if (ForgeRegistries.ITEMS.containsKey(r2))
+                            toMatch = Ingredient.fromItem(ForgeRegistries.ITEMS.getValue(r2));
+                    }
+                    break;
+                case 3:
+                    ResourceLocation r3 = new ResourceLocation(Config.lunarWaterItemParts[0], Config.lunarWaterItemParts[1]);
+                    if (ForgeRegistries.ITEMS.containsKey(r3)) {
+                        int meta = 0;
+                        try {
+                            meta = Integer.parseInt(Config.lunarWaterItemParts[2]);
+                        } catch (Exception e) {
+                            if ("*".equals(Config.lunarWaterItemParts[2]))
+                                meta = 32767;
+                        }
+                        toMatch = Ingredient.fromStacks(new ItemStack(ForgeRegistries.ITEMS.getValue(r3), 1, meta));
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if (toMatch == null)
+                toMatch = Ingredient.fromStacks(new ItemStack(Items.DYE, 1, EnumDyeColor.BLUE.getDyeDamage()));
+
             for (EntityItem item : items) {
                 if (item.isDead)
                     continue;
-                ItemStack stack = item.getItem();
-                if (stack.getItem() != Items.DYE || stack.getMetadata() != EnumDyeColor.BLUE.getDyeDamage())
+
+                if (!toMatch.apply(item.getItem())) 
                     continue;
+                
                 item.setDead();
 
                 IBlockState newState = Registry.lunarWaterCauldron.getDefaultState().withProperty(BlockCauldron.LEVEL, level);
