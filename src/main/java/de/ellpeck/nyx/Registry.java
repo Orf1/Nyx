@@ -204,12 +204,12 @@ public final class Registry {
         CapabilityManager.INSTANCE.register(NyxWorld.class, new Capability.IStorage<NyxWorld>() {
             @Nullable
             @Override
-            public NBTBase writeNBT(Capability capability, NyxWorld instance, EnumFacing side) {
+            public NBTBase writeNBT(Capability<NyxWorld> capability, NyxWorld instance, EnumFacing side) {
                 return null;
             }
 
             @Override
-            public void readNBT(Capability capability, NyxWorld instance, EnumFacing side, NBTBase nbt) {
+            public void readNBT(Capability<NyxWorld> capability, NyxWorld instance, EnumFacing side, NBTBase nbt) {
 
             }
         }, () -> null);

@@ -1,14 +1,11 @@
 package de.ellpeck.nyx.capabilities;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import de.ellpeck.nyx.Config;
 import de.ellpeck.nyx.Registry;
 import de.ellpeck.nyx.lunarevents.*;
 import de.ellpeck.nyx.network.PacketHandler;
 import de.ellpeck.nyx.network.PacketNyxWorld;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagLong;
@@ -18,19 +15,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.commons.lang3.mutable.MutableInt;
-import scala.Int;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class NyxWorld implements ICapabilityProvider, INBTSerializable<NBTTagCompound> {
 
@@ -229,6 +223,7 @@ public class NyxWorld implements ICapabilityProvider, INBTSerializable<NBTTagCom
         return capability == Registry.worldCapability;
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {

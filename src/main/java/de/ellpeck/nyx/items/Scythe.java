@@ -3,25 +3,22 @@ package de.ellpeck.nyx.items;
 import com.google.common.collect.Multimap;
 import de.ellpeck.nyx.Registry;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBush;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public class Scythe extends Item {
 
@@ -52,7 +49,8 @@ public class Scythe extends Item {
                         continue;
 
                     // modified version of Block.dropBlockAsItemWithChance since we want custom amounts
-                    List<ItemStack> drops = offBlock.getDrops(worldIn, offset, offState, 0);
+                    NonNullList<ItemStack> drops = NonNullList.create();
+                    offBlock.getDrops(drops, worldIn, offset, offState, 0);
                     float chance = ForgeEventFactory.fireBlockHarvesting(drops, worldIn, offset, offState, 0, 1, false, player);
                     for (ItemStack drop : drops) {
                         if (worldIn.rand.nextFloat() > chance)
@@ -93,6 +91,7 @@ public class Scythe extends Item {
         return repair.getItem() == Item.getItemFromBlock(Registry.crystal);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
         Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);

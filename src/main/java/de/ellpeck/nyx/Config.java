@@ -2,7 +2,6 @@ package de.ellpeck.nyx;
 
 import com.google.common.collect.Sets;
 import de.ellpeck.nyx.capabilities.NyxWorld;
-import de.ellpeck.nyx.lunarevents.LunarEvent;
 import de.ellpeck.nyx.lunarevents.StarShower;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
