@@ -12,10 +12,10 @@
 /classes
 /bin/
 /run/
+/.vscode
 
 *.classpath
 *.project
-.settings/org.eclipse.buildship.core.prefs
 *.launch
-.settings/org.eclipse.jdt.core.prefs
+.settings
 *.prefs

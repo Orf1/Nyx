@@ -1,5 +1,10 @@
 package de.ellpeck.nyx.commands;
 
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import de.ellpeck.nyx.entities.FallingMeteor;
 import net.minecraft.command.*;
 import net.minecraft.server.MinecraftServer;
@@ -9,6 +14,11 @@ public class CommandMeteor extends CommandBase {
     @Override
     public String getName() {
         return "nyxmeteor";
+    }
+
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
     }
 
     @Override
@@ -42,5 +52,16 @@ public class CommandMeteor extends CommandBase {
         meteor.homing = homing;
         pos = meteor.getPosition();
         notifyCommandListener(sender, this, "command.nyx.meteor.success", pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, 
+            String[] args, @Nullable BlockPos targetPos) {
+        if (args.length > 0 && args.length <= 2)
+            return getTabCompletionCoordinateXZ(args, 0, targetPos);
+        else if (args.length == 3)
+            return Collections.emptyList();
+        else
+            return getListOfStringsMatchingLastWord(args, "true", "false");
     }
 }

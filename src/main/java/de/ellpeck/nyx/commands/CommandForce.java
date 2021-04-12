@@ -19,6 +19,11 @@ public class CommandForce extends CommandBase {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
+    }
+
+    @Override
     public String getUsage(ICommandSender sender) {
         return "command.nyx.force.usage";
     }
@@ -34,7 +39,7 @@ public class CommandForce extends CommandBase {
             world.forcedEvent = null;
             notifyCommandListener(sender, this, "command.nyx.force.clear");
         } else {
-            Optional<LunarEvent> event = world.lunarEvents.stream().filter(e -> e.name.equals(args[0])).findFirst();
+            Optional<LunarEvent> event = world.lunarEvents.stream().filter(e -> e.name.equalsIgnoreCase(args[0])).findFirst();
             if (!event.isPresent())
                 throw new SyntaxErrorException("command.nyx.force.invalid", args[0]);
             world.forcedEvent = event.get();

@@ -1,7 +1,6 @@
 package de.ellpeck.nyx;
 
-import de.ellpeck.nyx.commands.CommandForce;
-import de.ellpeck.nyx.commands.CommandMeteor;
+import de.ellpeck.nyx.commands.*;
 import de.ellpeck.nyx.network.PacketHandler;
 import de.ellpeck.nyx.proxy.CommonProxy;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -43,6 +42,7 @@ public class Nyx {
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandForce());
+        event.registerServerCommand(new CommandClearCache());
         if (Config.meteors)
             event.registerServerCommand(new CommandMeteor());
     }

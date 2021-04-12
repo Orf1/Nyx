@@ -106,7 +106,7 @@ public final class Config {
         meteorChanceNight = instance.get("meteors", "meteorChanceNight", 0.0024, "The chance of a meteor spawning every second, during nighttime").getDouble();
         meteorGateDimension = instance.get("meteors", "meteorGateDimension", "the_nether", "The dimension that needs to be entered to increase the spawning of meteors").getString();
         meteorChanceAfterGate = instance.get("meteors", "meteorChanceAfterGate", 0.0002, "The chance of a meteor spawning every second, during the day, after the gate dimension has been entered once").getDouble();
-        meteorChanceAfterGateNight = instance.get("meteors", "meteorChanceAfterGateNight", 0.003, "The chance of a meteor spawning every second, during the day, after the gate dimension has been entered once").getDouble();
+        meteorChanceAfterGateNight = instance.get("meteors", "meteorChanceAfterGateNight", 0.003, "The chance of a meteor spawning every second, during the night, after the gate dimension has been entered once").getDouble();
         meteorChanceStarShower = instance.get("meteors", "meteorChanceStarShower", 0.0075, "The chance of a meteor spawning every second, during a star shower").getDouble();
         meteorChanceEnd = instance.get("meteors", "meteorChanceEnd", 0.003, "The chance of a meteor spawning every second, in the end dimension").getDouble();
         meteorSpawnRadius = instance.get("meteors", "meteorSpawnRadius", 1000, "The amount of blocks a meteor can spawn away from the nearest player").getInt();
