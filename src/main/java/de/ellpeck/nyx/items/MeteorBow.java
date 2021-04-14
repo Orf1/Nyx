@@ -22,9 +22,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public class Bow extends ItemBow {
+public class MeteorBow extends ItemBow {
 
-    public Bow() {
+    public MeteorBow() {
         this.setMaxDamage(2250);
         // modified copy of super, since we increase the use time from 20 to 30
         this.addPropertyOverride(new ResourceLocation("pull"), new IItemPropertyGetter() {

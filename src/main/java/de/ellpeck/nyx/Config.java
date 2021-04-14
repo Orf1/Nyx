@@ -3,12 +3,20 @@ package de.ellpeck.nyx;
 import com.google.common.collect.Sets;
 import de.ellpeck.nyx.capabilities.NyxWorld;
 import de.ellpeck.nyx.lunarevents.StarShower;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class Config {
 
@@ -58,23 +66,59 @@ public final class Config {
     public static int crystalDurability;
     public static int hammerDamage;
     public static double bowDamageMultiplier;
+    public static Set<LunarWaterSource> lunarWaterRemoveNegative;
+    public static Set<LunarWaterSource> lunarWaterRemoveAll;
 
-    public static void init(File file) {
+    private static Map<LunarWaterSource, Set<String>> _lunarWaterEffects = new HashMap<>();
+    public static Map<LunarWaterSource, Set<PotionEffect>> lunarWaterEffects;
+
+    public static void preInit(File file) {
         instance = new Configuration(file);
         instance.load();
         load();
     }
 
+    public static void init() {
+        lunarWaterEffects = _lunarWaterEffects.entrySet().stream()
+                .map(e -> new SimpleEntry<LunarWaterSource, Set<PotionEffect>>(e.getKey(), e.getValue().stream()
+                        .map(s -> {
+                            String[] split = s.split(";");
+                            if (split.length != 3)
+                                return new PotionEffect((Potion) null);
+                            return new PotionEffect(Potion.getPotionFromResourceLocation(split[0]), MathHelper.getInt(split[1], 20), MathHelper.getInt(split[2], 0));
+                        })
+                        .filter(p -> p.getPotion() != null)
+                        .collect(Collectors.toSet()))
+                )
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
     public static void load() {
         allowedDimensions = Sets.newHashSet(instance.get("general", "allowedDimensions", new String[]{"overworld"}, "Names of the dimensions that lunar events should occur in").getStringList());
-        lunarWater = instance.get("general", "lunarWater", true, "If lunar water should be enabled").getBoolean();
-        lunarWaterItemParts = instance.get("general", "lunarWaterItem", "minecraft:dye:11", "The item that needs to be dropped into a cauldron to turn it into lunar water. Examples include 'minecraft:stick', 'minecraft:wool:3', and 'ore:stone'").getString().split(":");
         meteorShardGuardianChance = instance.get("general", "meteorShardGuardianChance", 0.05, "The chance in percent (1 = 100%) for a meteor shard to be dropped from an elder guardian", 0, 1).getDouble();
         mobDuplicationBlacklist = Sets.newHashSet(instance.get("general", "mobDuplicationBlacklist", new String[0], "The registry names of entities that should not be spawned during the full and blood moons. If isMobDuplicationWhitelist is true, this acts as a whitelist instead.").getStringList());
         isMobDuplicationWhitelist = instance.get("general", "isMobDuplicationWhitelist", false, "If the mobDuplicationBlacklist should act as a whitelist instead").getBoolean();
         moonEventTint = instance.get("general", "moonEventTint", true, "If moon events should tint the sky").getBoolean();
-        lunarWaterTicks = instance.get("general", "lunarWaterTicks", new int[]{1200, -1, 4800, 4800, 3600, 3600, 2400, 2400, 600, -1}, "The amount of ticks that a cauldron of water must be exposed to the night sky to be ready to turn into lunar water, per moon phase. From first to last, the entries are: Full moon, new moon, waning crescent, waxing crescent, third quarter, first quarter, waning gibbous, waxing gibbous, harvest moon and blood moon. Set any entry to -1 to disable lunar water production for that phase.").getIntList();
         eventNotifications = instance.get("general", "eventNotifications", true, "If moon events should be announced in chat when they start").getBoolean();
+
+
+        lunarWater = instance.get("lunarWater", "lunarWater", true, "If lunar water should be enabled").getBoolean();
+        lunarWaterItemParts = instance.get("lunarWater", "lunarWaterItem", "minecraft:dye:11", "The item that needs to be dropped into a cauldron to turn it into lunar water.\nExamples include 'minecraft:stick', 'minecraft:wool:3', and 'ore:stone'").getString().split(":");
+        lunarWaterTicks = instance.get("lunarWater", "lunarWaterTicks", new int[]{1200, -1, 4800, 4800, 3600, 3600, 2400, 2400, 600, -1}, 
+                "The amount of ticks that a cauldron of water must be exposed to the night sky to be ready to turn into lunar water, per moon phase.\n" + 
+                "From first to last, the entries are: Full moon, new moon, waning crescent, waxing crescent, third quarter, first quarter, waning gibbous, waxing gibbous, harvest moon and blood moon.\n" + 
+                "Set any entry to -1 to disable lunar water production for that phase.").getIntList();
+        lunarWaterRemoveNegative = getLunarWaterConfig("lunarWater", "lunarWaterRemoveNegative", LunarWaterSource.ALL, "Which lunar water methods should clear negative effects\nPossible values are " + String.join(", ", LunarWaterSource.getNames()));
+        lunarWaterRemoveAll = getLunarWaterConfig("lunarWater", "lunarWaterRemoveAll", LunarWaterSource.NONE, "Which lunar water methods should clear all effects\nPossible values are " + String.join(", ", LunarWaterSource.getNames()));
+        for (LunarWaterSource c : LunarWaterSource.values()) {
+            _lunarWaterEffects.put(c, 
+                Sets.newHashSet(
+                    instance.get("lunarWater", 
+                        "lunarWaterEffects" + c.name(), 
+                        new String[]{"minecraft:regeneration;100;1"}, 
+                        "The effects that lunar water in the method '" + c.name() + "' should give")
+                    .getStringList()));
+        }
 
         fullMoon = instance.get("fullMoon", "fullMoon", true, "If the vanilla full moon should be considered a proper lunar event").getBoolean();
         addPotionEffects = instance.get("fullMoon", "addPotionEffects", true, "If mobs spawned during a full moon should have random potion effects applied to them (similarly to spiders in the base game)").getBoolean();
@@ -138,6 +182,22 @@ public final class Config {
             }
         }
         return visitedGate ? meteorChanceAfterGate : meteorChance;
+    }
+
+    public static LunarWaterSource getLunarWaterConfig(String category, String key, LunarWaterSource defaultValue, String comment) {
+        return LunarWaterSource.valueOf(instance.get(category, key, defaultValue.name(), comment, LunarWaterSource.getNames()).getString());
+    }
+
+    public static Set<LunarWaterSource> getLunarWaterConfig(String category, String key, Set<LunarWaterSource> defaultValue, String comment) {
+        return Arrays.stream(instance.get(category, key, 
+            defaultValue.stream()
+                    .map(LunarWaterSource::name)
+                    .collect(Collectors.toList())
+                    .toArray(new String[0]), comment)
+            .getStringList())
+                .filter(LunarWaterSource::containsName)
+                .map(LunarWaterSource::valueOf)
+                .collect(Collectors.toSet());
     }
 
     public static class LunarEventConfig {

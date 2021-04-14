@@ -1,5 +1,6 @@
 package de.ellpeck.nyx.blocks;
 
+import de.ellpeck.nyx.LunarWaterSource;
 import de.ellpeck.nyx.Registry;
 import de.ellpeck.nyx.items.LunarWaterBottle;
 import net.minecraft.block.BlockCauldron;
@@ -96,7 +97,7 @@ public class LunarWaterCauldron extends BlockCauldron {
                 did = true;
             }
             if (entityIn instanceof EntityLivingBase) {
-                if (LunarWaterBottle.applyLunarWater((EntityLivingBase) entityIn))
+                if (LunarWaterBottle.applyLunarWater((EntityLivingBase) entityIn, LunarWaterSource.CAULDRON))
                     did = true;
             }
             if (did)

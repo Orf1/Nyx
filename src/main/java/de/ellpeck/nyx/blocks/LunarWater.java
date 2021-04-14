@@ -1,5 +1,6 @@
 package de.ellpeck.nyx.blocks;
 
+import de.ellpeck.nyx.LunarWaterSource;
 import de.ellpeck.nyx.Nyx;
 import de.ellpeck.nyx.items.LunarWaterBottle;
 import net.minecraft.block.material.Material;
@@ -26,7 +27,7 @@ public class LunarWater extends BlockFluidClassic {
     @Override
     public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
         if (entityIn instanceof EntityLivingBase)
-            LunarWaterBottle.applyLunarWater((EntityLivingBase) entityIn);
+            LunarWaterBottle.applyLunarWater((EntityLivingBase) entityIn, LunarWaterSource.STANDING);
     }
 
     @Override

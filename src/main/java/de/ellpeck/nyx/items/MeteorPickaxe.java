@@ -7,8 +7,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 
-public class Pickaxe extends ItemPickaxe {
-    public Pickaxe(ToolMaterial material) {
+public class MeteorPickaxe extends ItemPickaxe {
+    public MeteorPickaxe(ToolMaterial material) {
         super(material);
     }
 

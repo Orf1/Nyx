@@ -161,9 +161,9 @@ public final class Registry {
             unrefinedCrystal = initItem(new Item(), "unrefined_crystal");
             scythe = initItem(new Scythe(), "scythe");
             meteorIngot = initItem(new Item(), "meteor_ingot");
-            meteorBow = initItem(new Bow(), "meteor_bow");
-            meteorPickaxe = initItem(new Pickaxe(meteorToolMaterial), "meteor_pickaxe");
-            meteorAxe = initItem(new Axe(meteorToolMaterial, 12, -3.2F), "meteor_axe");
+            meteorBow = initItem(new MeteorBow(), "meteor_bow");
+            meteorPickaxe = initItem(new MeteorPickaxe(meteorToolMaterial), "meteor_pickaxe");
+            meteorAxe = initItem(new MeteorAxe(meteorToolMaterial, 12, -3.2F), "meteor_axe");
             meteorShovel = initItem(new ItemSpade(meteorToolMaterial), "meteor_shovel");
             meteorHoe = initItem(new ItemHoe(meteorToolMaterial), "meteor_hoe");
             meteorSword = initItem(new ItemSword(meteorToolMaterial), "meteor_sword");
@@ -171,7 +171,7 @@ public final class Registry {
             meteorChest = initItem(new ItemArmor(meteorArmorMaterial, 1, EntityEquipmentSlot.CHEST), "meteor_chest");
             meteorPants = initItem(new ItemArmor(meteorArmorMaterial, 2, EntityEquipmentSlot.LEGS), "meteor_pants");
             meteorBoots = initItem(new ItemArmor(meteorArmorMaterial, 3, EntityEquipmentSlot.FEET), "meteor_boots");
-            meteorHammer = initItem(new Hammer(meteorToolMaterial), "meteor_hammer");
+            meteorHammer = initItem(new MeteorHammer(meteorToolMaterial), "meteor_hammer");
         }
         if (Config.fallingStars)
             fallenStar = initItem(new FallenStar(), "fallen_star");

@@ -1,10 +1,11 @@
 package de.ellpeck.nyx.items;
 
+import de.ellpeck.nyx.Config;
+import de.ellpeck.nyx.LunarWaterSource;
 import de.ellpeck.nyx.Registry;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,22 +34,29 @@ public class LunarWaterBottle extends Item {
         this.setMaxStackSize(1);
     }
 
-    public static boolean applyLunarWater(EntityLivingBase entity) {
+    public static boolean applyLunarWater(EntityLivingBase entity, LunarWaterSource type) {
         boolean did = false;
 
-        Set<Potion> effectsToRemove = new HashSet<>();
-        for (PotionEffect effect : entity.getActivePotionEffects()) {
-            Potion potion = effect.getPotion();
-            if (potion.isBadEffect()) {
-                effectsToRemove.add(potion);
+        if (Config.lunarWaterRemoveNegative.contains(type) || Config.lunarWaterRemoveAll.contains(type)) {
+            Set<Potion> effectsToRemove = new HashSet<>();
+            for (PotionEffect effect : entity.getActivePotionEffects()) {
+                Potion potion = effect.getPotion();
+                // Check if bad potion or if we should remove all anyway
+                if ((potion.isBadEffect() || Config.lunarWaterRemoveAll.contains(type)) 
+                        // Prevent feedback loops by making sure it's not reapplied after
+                        && Config.lunarWaterEffects.get(type).stream().map(PotionEffect::getPotion).noneMatch(p -> p.getRegistryName().equals(potion.getRegistryName()))){
+                    effectsToRemove.add(potion);
+                    did = true;
+                }
+            }
+            effectsToRemove.forEach(entity::removePotionEffect);
+        }
+
+        for (PotionEffect effect : Config.lunarWaterEffects.get(type)) {
+            if (entity.getActivePotionEffect(effect.getPotion()) == null) {
+                entity.addPotionEffect(effect);
                 did = true;
             }
-        }
-        effectsToRemove.forEach(entity::removePotionEffect);
-
-        if (entity.getActivePotionEffect(MobEffects.REGENERATION) == null) {
-            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 5 * 20, 1));
-            did = true;
         }
         return did;
     }
@@ -56,7 +64,7 @@ public class LunarWaterBottle extends Item {
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
         if (!worldIn.isRemote)
-            applyLunarWater(entityLiving);
+            applyLunarWater(entityLiving, LunarWaterSource.BOTTLE);
         EntityPlayer player = entityLiving instanceof EntityPlayer ? (EntityPlayer) entityLiving : null;
         if (player == null || !player.capabilities.isCreativeMode) {
             stack.shrink(1);

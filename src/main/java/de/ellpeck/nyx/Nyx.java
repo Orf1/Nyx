@@ -29,7 +29,7 @@ public class Nyx {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        Config.init(event.getSuggestedConfigurationFile());
+        Config.preInit(event.getSuggestedConfigurationFile());
         Registry.preInit();
         PacketHandler.init();
     }
@@ -37,6 +37,7 @@ public class Nyx {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         Registry.init();
+        Config.init();
     }
 
     @EventHandler

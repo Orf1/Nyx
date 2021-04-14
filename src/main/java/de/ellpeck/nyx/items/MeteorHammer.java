@@ -20,8 +20,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeHooks;
 
-public class Hammer extends Pickaxe {
-    public Hammer(ToolMaterial material) {
+public class MeteorHammer extends MeteorPickaxe {
+    public MeteorHammer(ToolMaterial material) {
         super(material);
         this.setMaxDamage(5500);
         this.attackDamage = 15;
