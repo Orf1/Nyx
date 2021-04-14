@@ -198,8 +198,7 @@ public final class Events {
             String dimension = event.world.provider.getDimensionType().getName();
             if (Config.allowedDimensions.contains(dimension)) {
                 for (EntityPlayer player : event.world.playerEntities) {
-                    float chanceMult = data.currentEvent instanceof StarShower ? 15 : 1;
-                    if (event.world.rand.nextFloat() > Config.fallingStarRarity * chanceMult)
+                    if (event.world.rand.nextFloat() > (data.currentEvent instanceof StarShower ? Config.fallingStarRarityShower : Config.fallingStarRarity))
                         continue;
                     BlockPos startPos = player.getPosition().add(event.world.rand.nextGaussian() * 20, 0, event.world.rand.nextGaussian() * 20);
                     startPos = event.world.getPrecipitationHeight(startPos).up(MathHelper.getInt(event.world.rand, 32, 64));

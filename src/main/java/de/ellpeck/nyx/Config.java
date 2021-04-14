@@ -33,6 +33,7 @@ public final class Config {
     public static double meteorShardGuardianChance;
     public static boolean fallingStars;
     public static double fallingStarRarity;
+    public static double fallingStarRarityShower;
     public static boolean fullMoon;
     public static boolean bloodMoonSleeping;
     public static int bloodMoonSpawnMultiplier;
@@ -145,7 +146,8 @@ public final class Config {
 
         starShowers = new LunarEventConfig("fallingStars", "starShowers", "Star Showers", 0.05);
         fallingStars = instance.get("fallingStars", "fallingStars", true, "If falling stars should be enabled").getBoolean();
-        fallingStarRarity = instance.get("fallingStars", "fallingStarRarity", 0.01F, "The chance in percent (1 = 100%) for a falling star to appear at night for each player each second", 0, 1).getDouble();
+        fallingStarRarity = instance.get("fallingStars", "fallingStarRarity", 0.01F, "The chance in percent (1 = 100%) for a falling star to appear at night for each player per second", 0, 1).getDouble();
+        fallingStarRarityShower = instance.get("fallingStars", "fallingStarRarityShower", 0.15F, "The chance for a falling star to appear during a star shower for each player per second", 0, 1).getDouble();
 
         bloodMoon = new LunarEventConfig("bloodMoon", "bloodMoon", "Blood Moon", 0.05);
         bloodMoonSleeping = instance.get("bloodMoon", "bloodMoonSleeping", false, "If sleeping is allowed during a blood moon").getBoolean();
