@@ -4,6 +4,7 @@ import de.ellpeck.nyx.capabilities.NyxWorld;
 import net.minecraft.command.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -27,7 +28,10 @@ public class CommandClearCache extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        NyxWorld world = NyxWorld.get(sender.getEntityWorld());
+        World w = sender.getEntityWorld();
+        if (w.isRemote) return;
+        
+        NyxWorld world = NyxWorld.get(w);
         if (world == null)
             return;
         int size = world.cachedMeteorPositions.size();

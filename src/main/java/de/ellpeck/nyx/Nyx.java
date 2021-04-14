@@ -1,5 +1,7 @@
 package de.ellpeck.nyx;
 
+import org.apache.logging.log4j.Logger;
+
 import de.ellpeck.nyx.commands.*;
 import de.ellpeck.nyx.network.PacketHandler;
 import de.ellpeck.nyx.proxy.CommonProxy;
@@ -22,6 +24,7 @@ public class Nyx {
     public static Nyx instance;
     @SidedProxy(clientSide = "de.ellpeck.nyx.proxy.ClientProxy", serverSide = "de.ellpeck.nyx.proxy.CommonProxy")
     public static CommonProxy proxy;
+    public static Logger LOGGER;
 
     static {
         FluidRegistry.enableUniversalBucket();
@@ -29,6 +32,8 @@ public class Nyx {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        LOGGER = event.getModLog();
+
         Config.preInit(event.getSuggestedConfigurationFile());
         Registry.preInit();
         PacketHandler.init();

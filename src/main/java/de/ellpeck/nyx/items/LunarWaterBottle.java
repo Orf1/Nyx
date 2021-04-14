@@ -35,7 +35,7 @@ public class LunarWaterBottle extends Item {
     }
 
     public static boolean applyLunarWater(EntityLivingBase entity, LunarWaterSource type) {
-        boolean did = false;
+        boolean removed = false, added = false;
 
         if (Config.lunarWaterRemoveNegative.contains(type) || Config.lunarWaterRemoveAll.contains(type)) {
             Set<Potion> effectsToRemove = new HashSet<>();
@@ -46,7 +46,7 @@ public class LunarWaterBottle extends Item {
                         // Prevent feedback loops by making sure it's not reapplied after
                         && Config.lunarWaterEffects.get(type).stream().map(PotionEffect::getPotion).noneMatch(p -> p.getRegistryName().equals(potion.getRegistryName()))){
                     effectsToRemove.add(potion);
-                    did = true;
+                    removed = true;
                 }
             }
             effectsToRemove.forEach(entity::removePotionEffect);
@@ -54,11 +54,12 @@ public class LunarWaterBottle extends Item {
 
         for (PotionEffect effect : Config.lunarWaterEffects.get(type)) {
             if (entity.getActivePotionEffect(effect.getPotion()) == null) {
-                entity.addPotionEffect(effect);
-                did = true;
+                entity.addPotionEffect(new PotionEffect(effect));
+                added = true;
             }
         }
-        return did;
+
+        return removed || added;
     }
 
     @Override
