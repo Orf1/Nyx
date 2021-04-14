@@ -3,6 +3,7 @@ package de.ellpeck.nyx;
 import com.google.common.collect.Sets;
 import de.ellpeck.nyx.capabilities.NyxWorld;
 import de.ellpeck.nyx.lunarevents.StarShower;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.MathHelper;
@@ -66,6 +67,8 @@ public final class Config {
     public static int crystalDurability;
     public static int hammerDamage;
     public static double bowDamageMultiplier;
+    public static Set<ItemStack> scytheDropBlacklist;
+    private static Set<String> _scytheDropBlacklist;
     public static Set<LunarWaterSource> lunarWaterRemoveNegative;
     public static Set<LunarWaterSource> lunarWaterRemoveAll;
 
@@ -91,6 +94,12 @@ public final class Config {
                         .collect(Collectors.toSet()))
                 )
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        
+        scytheDropBlacklist = _scytheDropBlacklist.stream()
+                .map(s -> ItemMetaHelper.getFromString("scythe drop blacklist", s))
+                .flatMap(Set::stream)
+                .filter(i -> i != null && !i.isEmpty())
+                .collect(Collectors.toSet());
     }
 
     public static void load() {
@@ -161,6 +170,7 @@ public final class Config {
         crystalDurability = instance.get("meteors", "crystalDurability", 1000, "The amount of uses that a gleaning crystal should have for bone-mealing").getInt();
         hammerDamage = instance.get("meteors", "hammerDamage", 15, "The amount of damage that the meteor hammer deals if the maximum flight time was used").getInt();
         bowDamageMultiplier = instance.get("meteors", "bowDamageMult", 1.75, "The multiplier for the amount of damage inflicted by the meteor bow's arrows").getDouble();
+        _scytheDropBlacklist = Sets.newHashSet(instance.get("meteors", "scytheDropBlacklist", new String[0], "Drops that the scythe shouldn't multiply").getStringList());
 
         if (instance.hasChanged())
             instance.save();

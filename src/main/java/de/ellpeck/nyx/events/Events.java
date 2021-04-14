@@ -441,7 +441,7 @@ public final class Events {
             level = 3;
 
             if (!world.isRemote) {
-                player.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.BUCKET));
+                if (!player.isCreative()) player.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.BUCKET));
                 world.setBlockState(pos, Registry.lunarWaterCauldron.getDefaultState().withProperty(BlockCauldron.LEVEL, level));
             }
 

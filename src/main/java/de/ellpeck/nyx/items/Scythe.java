@@ -1,6 +1,8 @@
 package de.ellpeck.nyx.items;
 
 import com.google.common.collect.Multimap;
+
+import de.ellpeck.nyx.Config;
 import de.ellpeck.nyx.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -53,6 +55,11 @@ public class Scythe extends Item {
                     offBlock.getDrops(drops, worldIn, offset, offState, 0);
                     float chance = ForgeEventFactory.fireBlockHarvesting(drops, worldIn, offset, offState, 0, 1, false, player);
                     for (ItemStack drop : drops) {
+                        if (Config.scytheDropBlacklist.stream()
+                                .anyMatch(i -> i.getItem().equals(drop.getItem()) 
+                                        && i.getMetadata() == drop.getMetadata()))
+                            continue;
+
                         if (worldIn.rand.nextFloat() > chance)
                             continue;
                         // increase drop amount by chance
