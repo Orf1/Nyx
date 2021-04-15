@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -63,12 +64,12 @@ public class Scythe extends Item {
                         if (worldIn.rand.nextFloat() > chance)
                             continue;
                         // increase drop amount by chance
-                        if (worldIn.rand.nextFloat() <= 0.6F) {
-                            multCount(drop, 2);
-                        } else if (worldIn.rand.nextFloat() <= 0.4F) {
-                            multCount(drop, 3);
-                        } else if (worldIn.rand.nextFloat() <= 0.2F) {
-                            multCount(drop, 4);
+                        for (String s : Config.scytheDropChances) {
+                            String[] split = s.split(";");
+                            if (worldIn.rand.nextDouble() <= MathHelper.getDouble(split[0], -1)) {
+                                multCount(drop, MathHelper.getInt(split[1], 1));
+                                break;
+                            }
                         }
                         Block.spawnAsEntity(worldIn, offset, drop);
                     }

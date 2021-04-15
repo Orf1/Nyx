@@ -1,5 +1,6 @@
 package de.ellpeck.nyx.entities;
 
+import de.ellpeck.nyx.Config;
 import de.ellpeck.nyx.Nyx;
 import de.ellpeck.nyx.Registry;
 import net.minecraft.entity.Entity;
@@ -8,7 +9,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -40,7 +40,7 @@ public class FallingStar extends Entity {
 
         if (!this.world.isRemote) {
             if (this.collided) {
-                this.world.playSound(null, this.posX, this.posY, this.posZ, Registry.fallingStarImpactSound, SoundCategory.AMBIENT, 10, 1);
+                this.playSound(Registry.fallingStarImpactSound, (float) Config.fallingStarImpactVolume, 1);
 
                 EntityItem item = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(Registry.fallenStar));
                 item.getEntityData().setBoolean(Nyx.ID + ":fallen_star", true);
@@ -48,7 +48,7 @@ public class FallingStar extends Entity {
                 this.setDead();
             } else {
                 if (this.ticksExisted % 40 == 0)
-                    this.world.playSound(null, this.posX, this.posY, this.posZ, Registry.fallingStarSound, SoundCategory.AMBIENT, 5, 1);
+                    this.playSound(Registry.fallingStarSound, (float) Config.fallingStarAmbientVolume, 1);
             }
         } else {
             for (int i = 0; i < 2; i++) {

@@ -34,6 +34,8 @@ public final class Config {
     public static boolean fallingStars;
     public static double fallingStarRarity;
     public static double fallingStarRarityShower;
+    public static double fallingStarImpactVolume;
+    public static double fallingStarAmbientVolume;
     public static boolean fullMoon;
     public static boolean bloodMoonSleeping;
     public static int bloodMoonSpawnMultiplier;
@@ -68,6 +70,7 @@ public final class Config {
     public static int crystalDurability;
     public static int hammerDamage;
     public static double bowDamageMultiplier;
+    public static String[] scytheDropChances;
     public static Set<ItemStack> scytheDropBlacklist;
     private static Set<String> _scytheDropBlacklist;
     public static Set<LunarWaterSource> lunarWaterRemoveNegative;
@@ -148,6 +151,8 @@ public final class Config {
         fallingStars = instance.get("fallingStars", "fallingStars", true, "If falling stars should be enabled").getBoolean();
         fallingStarRarity = instance.get("fallingStars", "fallingStarRarity", 0.01F, "The chance in percent (1 = 100%) for a falling star to appear at night for each player per second", 0, 1).getDouble();
         fallingStarRarityShower = instance.get("fallingStars", "fallingStarRarityShower", 0.15F, "The chance for a falling star to appear during a star shower for each player per second", 0, 1).getDouble();
+        fallingStarImpactVolume = instance.get("fallingStars", "fallingStarImpactVolume", 10F, "The volume for the falling star impact sound").getDouble();
+        fallingStarAmbientVolume = instance.get("fallingStars", "fallingStarAmbientVolume", 5F, "The volume for the falling star ambient sound").getDouble();
 
         bloodMoon = new LunarEventConfig("bloodMoon", "bloodMoon", "Blood Moon", 0.05);
         bloodMoonSleeping = instance.get("bloodMoon", "bloodMoonSleeping", false, "If sleeping is allowed during a blood moon").getBoolean();
@@ -169,10 +174,18 @@ public final class Config {
         meteorDisallowTime = instance.get("meteors", "meteorDisallowTime", 12000, "The amount of ticks that need to pass for each player until the chance of a meteor spawning in the area is halved (and then halved again, and so on). This decreases the chance of a meteor hitting a base or player hub").getInt();
         meteorKillUnloaded = instance.get("meteors", "meteorKillUnloaded", false, "If meteors passing through unloaded chunks should be removed. If the game is lagging because of the unloaded chunks, try enabling this").getBoolean();
         meteorCacheUnloaded = instance.get("meteors", "meteorCacheUnloaded", false, "If meteors passing through unloaded chunks should be cached at that position until entering the unloaded chunk. This option is ignored if meteorKillUnloaded is true.").getBoolean();
-        crystalDurability = instance.get("meteors", "crystalDurability", 1000, "The amount of uses that a gleaning crystal should have for bone-mealing").getInt();
-        hammerDamage = instance.get("meteors", "hammerDamage", 15, "The amount of damage that the meteor hammer deals if the maximum flight time was used").getInt();
-        bowDamageMultiplier = instance.get("meteors", "bowDamageMult", 1.75, "The multiplier for the amount of damage inflicted by the meteor bow's arrows").getDouble();
-        _scytheDropBlacklist = Sets.newHashSet(instance.get("meteors", "scytheDropBlacklist", new String[0], "Drops that the scythe shouldn't multiply").getStringList());
+        
+        crystalDurability = instance.get("equipment", "crystalDurability", 1000, "The amount of uses that a gleaning crystal should have for bone-mealing").getInt();
+        hammerDamage = instance.get("equipment", "hammerDamage", 15, "The amount of damage that the meteor hammer deals if the maximum flight time was used").getInt();
+        bowDamageMultiplier = instance.get("equipment", "bowDamageMult", 1.75, "The multiplier for the amount of damage inflicted by the meteor bow's arrows").getDouble();
+        _scytheDropBlacklist = Sets.newHashSet(instance.get("equipment", "scytheDropBlacklist", new String[0], "Drops that the scythe shouldn't multiply").getStringList());
+        scytheDropChances = instance.get("equipment", "scytheDropChances", new String[]{"0.6;2", "0.4;3", "0.2;4"}, 
+                "The drop chances for the scythe. The order of this list matters!\n" + 
+                "The scythe will, for each drop, check against this list in order.\n" + 
+                "Each line shows the chance for that drop and the multiplier for that drop if the chance is selected.\n" + 
+                "If the drop is not selected, the scythe moves to the next drop chance.\n" + 
+                "If the list is empty, the scythe will not multiply drops.\n" + 
+                "The format for each line is 'chance;drop_mult'").getStringList();
 
         if (instance.hasChanged())
             instance.save();
