@@ -37,7 +37,7 @@ public class StarShower extends LunarEvent {
 
     @Override
     public int getSkyColor() {
-        return 0xdec25f;
+        return Config.colorStarShower;
     }
 
     @Override

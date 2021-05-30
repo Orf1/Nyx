@@ -58,7 +58,7 @@ public class BloodMoon extends LunarEvent {
 
     @Override
     public int getSkyColor() {
-        return 0x420d03;
+        return Config.colorBloodMoon;
     }
 
     @Override

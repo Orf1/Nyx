@@ -46,7 +46,7 @@ public class HarvestMoon extends LunarEvent {
 
     @Override
     public int getSkyColor() {
-        return 0x3f3fc0;
+        return Config.colorHarvestMoon;
     }
 
     @Override

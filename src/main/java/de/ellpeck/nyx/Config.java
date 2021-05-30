@@ -76,6 +76,10 @@ public final class Config {
     public static Set<LunarWaterSource> lunarWaterRemoveNegative;
     public static Set<LunarWaterSource> lunarWaterRemoveAll;
 
+    public static int colorBloodMoon;
+    public static int colorHarvestMoon;
+    public static int colorStarShower;
+
     private static Map<LunarWaterSource, Set<String>> _lunarWaterEffects = new HashMap<>();
     public static Map<LunarWaterSource, Set<PotionEffect>> lunarWaterEffects;
 
@@ -143,11 +147,13 @@ public final class Config {
         enchantingWhitelistDimensions = Sets.newHashSet(instance.get("enchantments", "enchantingWhitelistDimensions", new String[]{"the_nether", "the_end"}, "A list of names of dimensions where enchanting is always allowed, and not just at night").getStringList());
 
         harvestMoon = new LunarEventConfig("harvestMoon", "harvestMoon", "Harvest Moon", 0.05);
+        colorHarvestMoon = Integer.parseInt(instance.get("harvestMoon", "harvestMoonColor", "3f3fc0", "The hex code of the harvest moon color").getString(), 16);
         harvestMoonOnFull = instance.get("harvestMoon", "harvestMoonOnFull", true, "If the harvest moon should only occur on full moon nights").getBoolean();
         harvestMoonGrowAmount = instance.get("harvestMoon", "harvestMoonGrowAmount", 15, "The amount of plants that should be grown per chunk during the harvest moon", 0, 100).getInt();
         harvestMoonGrowInterval = instance.get("harvestMoon", "harvestMoonGrowInterval", 10, "The amount of ticks that should pass before plants are grown again during the harvest moon", 1, 100).getInt();
 
         starShowers = new LunarEventConfig("fallingStars", "starShowers", "Star Showers", 0.05);
+        colorStarShower = Integer.parseInt(instance.get("fallingStars", "starShowerColor", "dec25f", "The hex code of the star shower color").getString(), 16);
         fallingStars = instance.get("fallingStars", "fallingStars", true, "If falling stars should be enabled").getBoolean();
         fallingStarRarity = instance.get("fallingStars", "fallingStarRarity", 0.01F, "The chance in percent (1 = 100%) for a falling star to appear at night for each player per second", 0, 1).getDouble();
         fallingStarRarityShower = instance.get("fallingStars", "fallingStarRarityShower", 0.15F, "The chance for a falling star to appear during a star shower for each player per second", 0, 1).getDouble();
@@ -155,6 +161,7 @@ public final class Config {
         fallingStarAmbientVolume = instance.get("fallingStars", "fallingStarAmbientVolume", 5F, "The volume for the falling star ambient sound").getDouble();
 
         bloodMoon = new LunarEventConfig("bloodMoon", "bloodMoon", "Blood Moon", 0.05);
+        colorBloodMoon = Integer.parseInt(instance.get("bloodMoon", "bloodMoonColor", "420d03", "The hex code of the blood moon color").getString(), 16);
         bloodMoonSleeping = instance.get("bloodMoon", "bloodMoonSleeping", false, "If sleeping is allowed during a blood moon").getBoolean();
         bloodMoonSpawnMultiplier = instance.get("bloodMoon", "bloodMoonSpawnMultiplier", 2, "The multiplier with which mobs should spawn during the blood moon (eg 2 means 2 mobs spawn instead of 1)", 1, 1000).getInt();
         bloodMoonVanish = instance.get("bloodMoon", "bloodMoonVanish", true, "If mobs spawned by the blood moon should die at sunup").getBoolean();
