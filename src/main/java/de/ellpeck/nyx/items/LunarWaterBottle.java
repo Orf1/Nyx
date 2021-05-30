@@ -67,7 +67,7 @@ public class LunarWaterBottle extends Item {
         if (!worldIn.isRemote)
             applyLunarWater(entityLiving, LunarWaterSource.BOTTLE);
         EntityPlayer player = entityLiving instanceof EntityPlayer ? (EntityPlayer) entityLiving : null;
-        if (player == null || !player.capabilities.isCreativeMode) {
+        if (player == null || !player.isCreative()) {
             stack.shrink(1);
             if (stack.isEmpty())
                 return new ItemStack(Items.GLASS_BOTTLE);

@@ -88,7 +88,7 @@ public class LunarWaterCauldron extends BlockCauldron {
     @Override
     public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
         int i = state.getValue(LEVEL);
-        float f = (float) pos.getY() + (6.0F + (float) (3 * i)) / 16.0F;
+        float f = (float) pos.getY() + (5.5F + (float) (3 * i)) / 16.0F;
 
         if (!worldIn.isRemote && i > 0 && entityIn.getEntityBoundingBox().minY <= (double) f) {
             boolean did = false;

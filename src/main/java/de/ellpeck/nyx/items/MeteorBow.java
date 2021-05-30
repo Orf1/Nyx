@@ -105,7 +105,7 @@ public class MeteorBow extends ItemBow {
 
                     worldIn.playSound((EntityPlayer) null, entityplayer.posX, entityplayer.posY, entityplayer.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 
-                    if (!flag1 && !entityplayer.capabilities.isCreativeMode) {
+                    if (!flag1 && !entityplayer.isCreative()) {
                         itemstack.shrink(1);
 
                         if (itemstack.isEmpty()) {

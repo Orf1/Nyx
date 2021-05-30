@@ -30,15 +30,15 @@ public class Crystal extends BlockContainer {
         this.setLightLevel(0.9375F);
         this.setTickRandomly(true);
         Registry.initBlock(this, "crystal", ItemBlock::new);
-        GameRegistry.registerTileEntity(Tile.class, this.getRegistryName());
+        GameRegistry.registerTileEntity(TileEntityCrystal.class, this.getRegistryName());
     }
 
     @Override
     public void randomTick(World worldIn, BlockPos pos, IBlockState s, Random random) {
         TileEntity tile = worldIn.getTileEntity(pos);
-        if (!(tile instanceof Tile))
+        if (!(tile instanceof TileEntityCrystal))
             return;
-        Tile crystal = (Tile) tile;
+        TileEntityCrystal crystal = (TileEntityCrystal) tile;
         if (crystal.durability <= 0)
             return;
         int range = 5;
@@ -94,7 +94,7 @@ public class Crystal extends BlockContainer {
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new Tile();
+        return new TileEntityCrystal();
     }
 
     @Override
@@ -102,7 +102,7 @@ public class Crystal extends BlockContainer {
         return EnumBlockRenderType.MODEL;
     }
 
-    public static class Tile extends TileEntity implements ITickable {
+    public static class TileEntityCrystal extends TileEntity implements ITickable {
 
         public int durability;
 

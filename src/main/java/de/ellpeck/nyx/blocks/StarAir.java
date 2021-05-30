@@ -24,7 +24,7 @@ public class StarAir extends BlockContainer {
         super(Material.AIR);
         Registry.initBlock(this, "star_air", null);
         this.setLightLevel(1);
-        GameRegistry.registerTileEntity(Tile.class, this.getRegistryName());
+        GameRegistry.registerTileEntity(TileEntityStarAir.class, this.getRegistryName());
     }
 
     @Override
@@ -71,10 +71,10 @@ public class StarAir extends BlockContainer {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new Tile();
+        return new TileEntityStarAir();
     }
 
-    public static class Tile extends TileEntity implements ITickable {
+    public static class TileEntityStarAir extends TileEntity implements ITickable {
         @Override
         public void update() {
             if (this.world.isRemote)

@@ -49,7 +49,7 @@ public class ItemNyxSlab extends ItemBlock {
                         SoundType sound = this.doubleSlab.get().getSoundType(newState, worldIn, pos, player);
                         worldIn.playSound(player, pos, sound.getPlaceSound(), SoundCategory.BLOCKS,
                                 (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
-                        stack.shrink(1);
+                        if (!player.isCreative()) stack.shrink(1);
 
                         if (player instanceof EntityPlayerMP) {
                             CriteriaTriggers.PLACED_BLOCK.trigger((EntityPlayerMP) player, pos, stack);
