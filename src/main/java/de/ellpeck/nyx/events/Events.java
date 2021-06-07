@@ -63,14 +63,11 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -78,7 +75,6 @@ import java.util.stream.Collectors;
 @EventBusSubscriber(modid = Nyx.ID)
 public final class Events {
 
-    private static final Method SET_SLIME_SIZE_METHOD = ObfuscationReflectionHelper.findMethod(EntitySlime.class, "func_70799_a", void.class, int.class, boolean.class);
     private static final AttributeModifier METEOR_MOVEMENT_MODIFIER = new AttributeModifier(UUID.fromString("c1f96acc-e117-4dc1-a351-e295a5de6071"), Nyx.ID + ":meteor_movement_speed", -0.15F, 2); // 2 is multiply total
 
     @SubscribeEvent
@@ -361,11 +357,8 @@ public final class Events {
                     size += i * 2;
             }
             if (size != slime.getSlimeSize()) {
-                try {
-                    SET_SLIME_SIZE_METHOD.invoke(slime, size, true);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+                slime.setSlimeSize(size, true);
+
                 // Cancelling this event just suppresses onInitialSpawn, doc is wrong
                 event.setCanceled(true);
             }

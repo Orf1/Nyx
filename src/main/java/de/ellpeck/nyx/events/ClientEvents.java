@@ -26,7 +26,6 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -66,13 +65,8 @@ public final class ClientEvents {
         if (!Objects.equals(moonTex, lastMoonTextures)) {
             lastMoonTextures = moonTex;
 
-            ResourceLocation res = ObfuscationReflectionHelper.getPrivateValue(RenderGlobal.class, null, "field_110927_h");
-            ObfuscationReflectionHelper.setPrivateValue(ResourceLocation.class, res,
-                    moonTex == null ? "minecraft" : Nyx.ID,
-                    "field_110626_a");
-            ObfuscationReflectionHelper.setPrivateValue(ResourceLocation.class, res,
-                    moonTex == null ? "textures/environment/moon_phases.png" : "textures/moon/" + moonTex + ".png",
-                    "field_110625_b");
+            ResourceLocation newRes = moonTex == null ? RenderGlobal.MOON_PHASES_TEXTURES : new ResourceLocation(Nyx.ID, "textures/moon/" + moonTex + ".png");
+            RenderGlobal.MOON_PHASES_TEXTURES = newRes;
         }
     }
 
