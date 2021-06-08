@@ -294,7 +294,7 @@ public final class Events {
 
     @SubscribeEvent
     public static void onExpDrop(LivingExperienceDropEvent event) {
-        if (Config.enchantments && Config.lunarEdgeXp) {
+        if (Config.enchantments && !(Config.maxLunarEdgeXpMult <= 0)) {
             EntityPlayer player = event.getAttackingPlayer();
             if (player == null)
                 return;
@@ -304,6 +304,7 @@ public final class Events {
                 return;
             int exp = event.getDroppedExperience();
             float mod = level / (float) Registry.lunarEdge.getMaxLevel();
+            mod *= Config.maxLunarEdgeXpMult;
             event.setDroppedExperience(exp + MathHelper.floor(exp * mod));
         }
     }

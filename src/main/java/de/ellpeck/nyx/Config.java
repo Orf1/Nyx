@@ -28,7 +28,10 @@ public final class Config {
     public static String[] lunarWaterItemParts;
     public static boolean addPotionEffects;
     public static int additionalMobsChance;
-    public static boolean lunarEdgeXp;
+    public static double maxLunarEdgeXpMult;
+    public static double minLevelLunarEdgeDamage;
+    public static double maxLevelLunarEdgeDamage;
+    public static double baseLunarEdgeDamage;
     public static boolean disallowDayEnchanting;
     public static double meteorShardGuardianChance;
     public static boolean fallingStars;
@@ -142,7 +145,15 @@ public final class Config {
         additionalMobsChance = instance.get("fullMoon", "additionalMobsChance", 5, "The chance for an additional mob to be spawned when a mob spawns during a full moon. The higher the number, the less likely. Set to 0 to disable.", 0, 1000).getInt();
 
         enchantments = instance.get("enchantments", "enchantments", true, "If the enchantments should be enabled").getBoolean();
-        lunarEdgeXp = instance.get("enchantments", "lunarEdgeXp", true, "If a weapon enchanted with lunar edge should increase the experience drops of mobs").getBoolean();
+        maxLunarEdgeXpMult = instance.get("enchantments", "maxLunarEdgeXpMult", 1.0, 
+                "The max multiplier on the amount of xp added (which happens during a full moon)\n" + 
+                "Can be set to 0 to disable lunar edge xp gains\n" + 
+                "The multiplier scales up to the max according to the level and moon phase" + 
+                "Ex. if the config option is set to 2.5, a full moon with max lunar edge level would give" + 
+                "3.5x xp and a new moon would give 1x xp").getDouble();
+        minLevelLunarEdgeDamage = instance.get("enchantments", "minLevelLunarEdgeDamage", 1.25, "The amount of additional damage that should be applied to an item with level 1 lunar edge on a full moon.").getDouble();
+        maxLevelLunarEdgeDamage = instance.get("enchantments", "maxLevelLunarEdgeDamage", 3.25, "The amount of additional damage that should be applied to an item with max level lunar edge on a full moon.").getDouble();
+        baseLunarEdgeDamage = instance.get("enchantments", "baseLunarEdgeDamage", 0, "The amount of additional damage that will always be applied regardless of moon phase.").getDouble();
         disallowDayEnchanting = instance.get("enchantments", "disallowDayEnchanting", true, "If enchanting should be disallowed during the day").getBoolean();
         enchantingWhitelistDimensions = Sets.newHashSet(instance.get("enchantments", "enchantingWhitelistDimensions", new String[]{"the_nether", "the_end"}, "A list of names of dimensions where enchanting is always allowed, and not just at night").getStringList());
 
