@@ -7,9 +7,9 @@ import de.ellpeck.nyx.network.PacketHandler;
 import de.ellpeck.nyx.network.PacketNyxWorld;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagLong;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -35,7 +35,7 @@ public class NyxWorld implements ICapabilityProvider, INBTSerializable<NBTTagCom
     public final Set<BlockPos> cachedMeteorPositions = new HashSet<>();
     public final Map<ChunkPos, MutableInt> playersPresentTicks = new HashMap<>();
     public final Set<BlockPos> meteorLandingSites = new HashSet<>();
-    public final Set<String> visitedDimensions = new HashSet<>();
+    public final Set<Integer> visitedDimensions = new HashSet<>();
     public float eventSkyModifier;
     public int currentSkyColor;
     public LunarEvent currentEvent;
@@ -57,7 +57,7 @@ public class NyxWorld implements ICapabilityProvider, INBTSerializable<NBTTagCom
             // add to visited dimensions list
             if (this.world.getTotalWorldTime() % 200 == 0) {
                 for (EntityPlayer player : this.world.getMinecraftServer().getPlayerList().getPlayers())
-                    this.visitedDimensions.add(player.world.provider.getDimensionType().getName());
+                    this.visitedDimensions.add(player.world.provider.getDimension());
             }
 
             // calculate which chunks have players close to them for meteor spawning
@@ -87,7 +87,7 @@ public class NyxWorld implements ICapabilityProvider, INBTSerializable<NBTTagCom
         }
 
         // moon event stuff
-        String dimension = this.world.provider.getDimensionType().getName();
+        int dimension = this.world.provider.getDimension();
         if (Config.allowedDimensions.contains(dimension)) {
             moonPhase = this.world.getCurrentMoonPhaseFactor();
 
@@ -176,8 +176,8 @@ public class NyxWorld implements ICapabilityProvider, INBTSerializable<NBTTagCom
             }
             compound.setTag("players_present_ticks", ticks);
             NBTTagList dimensions = new NBTTagList();
-            for (String dim : this.visitedDimensions)
-                dimensions.appendTag(new NBTTagString(dim));
+            for (int dim : this.visitedDimensions)
+                dimensions.appendTag(new NBTTagInt(dim));
             compound.setTag("visited_dims", dimensions);
         }
         return compound;
@@ -214,7 +214,7 @@ public class NyxWorld implements ICapabilityProvider, INBTSerializable<NBTTagCom
             this.visitedDimensions.clear();
             NBTTagList dimensions = compound.getTagList("visited_dims", Constants.NBT.TAG_STRING);
             for (int i = 0; i < dimensions.tagCount(); i++)
-                this.visitedDimensions.add(((NBTTagString) dimensions.get(i)).getString());
+                this.visitedDimensions.add(((NBTTagInt) dimensions.get(i)).getInt());
         }
     }
 

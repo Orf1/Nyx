@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 public final class Config {
 
     public static Configuration instance;
-    public static Set<String> allowedDimensions;
+    public static Set<Integer> allowedDimensions;
     public static boolean enchantments;
     public static boolean lunarWater;
     public static String[] lunarWaterItemParts;
@@ -57,7 +56,7 @@ public final class Config {
     public static int[] lunarWaterTicks;
     public static double meteorChance;
     public static double meteorChanceNight;
-    public static String meteorGateDimension;
+    public static int meteorGateDimension;
     public static double meteorChanceAfterGate;
     public static double meteorChanceAfterGateNight;
     public static double meteorChanceStarShower;
@@ -66,9 +65,10 @@ public final class Config {
     public static boolean meteors;
     public static int meteorDisallowRadius;
     public static int meteorDisallowTime;
+    public static Set<Integer> meteorSpawnDimensions;
     public static boolean meteorKillUnloaded;
     public static boolean meteorCacheUnloaded;
-    public static Set<String> enchantingWhitelistDimensions;
+    public static Set<Integer> enchantingWhitelistDimensions;
     public static boolean eventNotifications;
     public static int crystalDurability;
     public static int hammerDamage;
@@ -114,7 +114,7 @@ public final class Config {
     }
 
     public static void load() {
-        allowedDimensions = Sets.newHashSet(instance.get("general", "allowedDimensions", new String[]{"overworld"}, "Names of the dimensions that lunar events should occur in").getStringList());
+        allowedDimensions = getDimensionConfig("general", "allowedDimensions", new String[]{"0"}, "IDs of the dimensions that lunar events should occur in");
         meteorShardGuardianChance = instance.get("general", "meteorShardGuardianChance", 0.05, "The chance in percent (1 = 100%) for a meteor shard to be dropped from an elder guardian", 0, 1).getDouble();
         mobDuplicationBlacklist = Sets.newHashSet(instance.get("general", "mobDuplicationBlacklist", new String[0], "The registry names of entities that should not be spawned during the full and blood moons. If isMobDuplicationWhitelist is true, this acts as a whitelist instead.").getStringList());
         isMobDuplicationWhitelist = instance.get("general", "isMobDuplicationWhitelist", false, "If the mobDuplicationBlacklist should act as a whitelist instead").getBoolean();
@@ -155,7 +155,7 @@ public final class Config {
         maxLevelLunarEdgeDamage = instance.get("enchantments", "maxLevelLunarEdgeDamage", 3.25, "The amount of additional damage that should be applied to an item with max level lunar edge on a full moon.").getDouble();
         baseLunarEdgeDamage = instance.get("enchantments", "baseLunarEdgeDamage", 0, "The amount of additional damage that will always be applied regardless of moon phase.").getDouble();
         disallowDayEnchanting = instance.get("enchantments", "disallowDayEnchanting", true, "If enchanting should be disallowed during the day").getBoolean();
-        enchantingWhitelistDimensions = Sets.newHashSet(instance.get("enchantments", "enchantingWhitelistDimensions", new String[]{"the_nether", "the_end"}, "A list of names of dimensions where enchanting is always allowed, and not just at night").getStringList());
+        enchantingWhitelistDimensions = getDimensionConfig("enchantments", "enchantingWhitelistDimensions", new String[]{"-1", "1"}, "A list of dimension IDs where enchanting is always allowed, and not just at night");
 
         harvestMoon = new LunarEventConfig("harvestMoon", "harvestMoon", "Harvest Moon", 0.05);
         colorHarvestMoon = Integer.parseInt(instance.get("harvestMoon", "harvestMoonColor", "3f3fc0", "The hex code of the harvest moon color").getString(), 16);
@@ -180,9 +180,10 @@ public final class Config {
         bloodMoonOnFull = instance.get("bloodMoon", "bloodMoonOnFull", true, "If the blood moon should only occur on full moon nights").getBoolean();
 
         meteors = instance.get("meteors", "meteors", true, "If meteor content should be enabled").getBoolean();
+        meteorSpawnDimensions = getDimensionConfig("meteors", "meteorDimensions", new String[]{"0"}, "The IDs of dimensions to spawn meteors in (meteorChanceEnd ignores this!)");
         meteorChance = instance.get("meteors", "meteorChance", 0.00014, "The chance of a meteor spawning every second, during the day").getDouble();
         meteorChanceNight = instance.get("meteors", "meteorChanceNight", 0.0024, "The chance of a meteor spawning every second, during nighttime").getDouble();
-        meteorGateDimension = instance.get("meteors", "meteorGateDimension", "the_nether", "The dimension that needs to be entered to increase the spawning of meteors").getString();
+        meteorGateDimension = instance.get("meteors", "meteorGateDimension", -1, "The dimension that needs to be entered to increase the spawning of meteors").getInt();
         meteorChanceAfterGate = instance.get("meteors", "meteorChanceAfterGate", 0.0002, "The chance of a meteor spawning every second, during the day, after the gate dimension has been entered once").getDouble();
         meteorChanceAfterGateNight = instance.get("meteors", "meteorChanceAfterGateNight", 0.003, "The chance of a meteor spawning every second, during the night, after the gate dimension has been entered once").getDouble();
         meteorChanceStarShower = instance.get("meteors", "meteorChanceStarShower", 0.0075, "The chance of a meteor spawning every second, during a star shower").getDouble();
@@ -210,11 +211,11 @@ public final class Config {
     }
 
     public static double getMeteorChance(World world, NyxWorld data) {
-        DimensionType dim = world.provider.getDimensionType();
-        if (dim == DimensionType.THE_END)
+        int dim = world.provider.getDimension();
+        if (dim == 1)
             return meteorChanceEnd;
 
-        if (!Config.allowedDimensions.contains(dim.getName()))
+        if (!Config.meteorSpawnDimensions.contains(dim))
             return 0;
         boolean visitedGate = data.visitedDimensions.contains(meteorGateDimension);
         if (!NyxWorld.isDaytime(world)) {
@@ -240,6 +241,13 @@ public final class Config {
             .getStringList())
                 .filter(LunarWaterSource::containsName)
                 .map(LunarWaterSource::valueOf)
+                .collect(Collectors.toSet());
+    }
+
+    public static Set<Integer> getDimensionConfig(String category, String key, String[] defaultValue, String comment) {
+        return Arrays.stream(instance.get(category, key, defaultValue, comment).getStringList())
+                .map(s -> MathHelper.getInt(s, Integer.MIN_VALUE))
+                .filter(i -> i != Integer.MIN_VALUE)
                 .collect(Collectors.toSet());
     }
 

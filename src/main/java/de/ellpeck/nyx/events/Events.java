@@ -191,7 +191,7 @@ public final class Events {
 
         // Falling stars
         if (!event.world.isRemote && Config.fallingStars && !NyxWorld.isDaytime(event.world) && event.world.getTotalWorldTime() % 20 == 0) {
-            String dimension = event.world.provider.getDimensionType().getName();
+            int dimension = event.world.provider.getDimension();
             if (Config.allowedDimensions.contains(dimension)) {
                 for (EntityPlayer player : event.world.playerEntities) {
                     if (event.world.rand.nextFloat() > (data.currentEvent instanceof StarShower ? Config.fallingStarRarityShower : Config.fallingStarRarity))
@@ -411,7 +411,7 @@ public final class Events {
                 break ench;
             if (!(block instanceof BlockEnchantmentTable))
                 break ench;
-            if (Config.enchantingWhitelistDimensions.contains(world.provider.getDimensionType().getName()))
+            if (Config.enchantingWhitelistDimensions.contains(world.provider.getDimension()))
                 break ench;
             event.setUseBlock(Event.Result.DENY);
             player.sendStatusMessage(new TextComponentTranslation("info." + Nyx.ID + ".day_enchanting"), true);
