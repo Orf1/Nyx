@@ -148,12 +148,12 @@ public final class Config {
         maxLunarEdgeXpMult = instance.get("enchantments", "maxLunarEdgeXpMult", 1.0, 
                 "The max multiplier on the amount of xp added (which happens during a full moon)\n" + 
                 "Can be set to 0 to disable lunar edge xp gains\n" + 
-                "The multiplier scales up to the max according to the level and moon phase" + 
-                "Ex. if the config option is set to 2.5, a full moon with max lunar edge level would give" + 
+                "The multiplier scales up to the max according to the level and moon phase\n" + 
+                "Ex: if the config option is set to 2.5, a full moon with max lunar edge level would give\n" + 
                 "3.5x xp and a new moon would give 1x xp").getDouble();
         minLevelLunarEdgeDamage = instance.get("enchantments", "minLevelLunarEdgeDamage", 1.25, "The amount of additional damage that should be applied to an item with level 1 lunar edge on a full moon.").getDouble();
         maxLevelLunarEdgeDamage = instance.get("enchantments", "maxLevelLunarEdgeDamage", 3.25, "The amount of additional damage that should be applied to an item with max level lunar edge on a full moon.").getDouble();
-        baseLunarEdgeDamage = instance.get("enchantments", "baseLunarEdgeDamage", 0, "The amount of additional damage that will always be applied regardless of moon phase.").getDouble();
+        baseLunarEdgeDamage = instance.get("enchantments", "baseLunarEdgeDamage", 0.0, "The amount of additional damage that will always be applied regardless of moon phase.").getDouble();
         disallowDayEnchanting = instance.get("enchantments", "disallowDayEnchanting", true, "If enchanting should be disallowed during the day").getBoolean();
         enchantingWhitelistDimensions = getDimensionConfig("enchantments", "enchantingWhitelistDimensions", new String[]{"-1", "1"}, "A list of dimension IDs where enchanting is always allowed, and not just at night");
 
