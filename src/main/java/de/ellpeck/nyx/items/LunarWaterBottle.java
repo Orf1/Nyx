@@ -31,7 +31,7 @@ public class LunarWaterBottle extends Item {
 
     public LunarWaterBottle() {
         Registry.initItem(this, "lunar_water_bottle");
-        this.setMaxStackSize(1);
+        this.setMaxStackSize(16);
     }
 
     public static boolean applyLunarWater(EntityLivingBase entity, LunarWaterSource type) {
